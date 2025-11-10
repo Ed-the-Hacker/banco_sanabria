@@ -1,287 +1,158 @@
-# Banco Sanabria - Sistema de Gestión Bancaria
+# Sistema de Gestión Bancaria
 
-Sistema completo de gestión de cuentas bancarias desarrollado con .NET 6 y Angular.
+Aplicación full-stack para la gestión de clientes, cuentas y movimientos bancarios.
 
-## 📋 Tabla de Contenidos
+## Stack Tecnológico
 
-- [Descripción](#descripción)
-- [Tecnologías](#tecnologías)
-- [Arquitectura](#arquitectura)
-- [Requisitos Previos](#requisitos-previos)
-- [Instalación](#instalación)
-- [Configuración](#configuración)
-- [Ejecución](#ejecución)
-- [Testing](#testing)
-- [API Endpoints](#api-endpoints)
-- [Docker](#docker)
-
-## 📖 Descripción
-
-Aplicación web para la gestión integral de cuentas bancarias que incluye:
-
-- Gestión de clientes
-- Administración de cuentas bancarias
-- Registro de movimientos (débitos y créditos)
-- Generación de reportes con exportación a PDF
-- Validaciones de negocio (límites diarios, saldos disponibles)
-
-## 🛠️ Tecnologías
-
-### Backend
+**Backend:**
 - .NET 6
-- Entity Framework Core 6
-- SQL Server / PostgreSQL
-- QuestPDF (generación de PDFs)
-- xUnit (pruebas unitarias)
-- Swagger/OpenAPI
+- Entity Framework Core
+- SQL Server
+- QuestPDF para reportes
 
-### Frontend (Próximamente)
-- Angular 16+
+**Frontend:**
+- Angular 16
 - TypeScript
-- RxJS
-- CSS/SCSS personalizado
+- SCSS
 
-## 🏗️ Arquitectura
+## Requisitos
 
-El proyecto sigue una **arquitectura limpia (Clean Architecture)** con las siguientes capas:
+- .NET 6 SDK
+- Node.js 16+
+- SQL Server (o usar Docker)
 
-```
-banco_sanabria/
-├── src/
-│   ├── BancoSanabria.API/          # Capa de presentación (Controllers, Middleware)
-│   ├── BancoSanabria.Application/  # Lógica de negocio (Services, DTOs, Strategies)
-│   ├── BancoSanabria.Domain/       # Entidades del dominio
-│   └── BancoSanabria.Infrastructure/ # Acceso a datos (Repositories, DbContext)
-└── tests/
-    └── BancoSanabria.Tests/        # Pruebas unitarias
-```
+## Instalación y Ejecución
 
-### Patrones Implementados
-
-- **Repository Pattern**: Abstracción del acceso a datos
-- **Unit of Work**: Gestión de transacciones
-- **Strategy Pattern**: Manejo de tipos de movimiento (Crédito/Débito)
-- **Dependency Injection**: Inversión de control
-- **CQRS**: Separación de comandos y consultas
-
-## ✅ Requisitos Previos
-
-- [.NET 6 SDK](https://dotnet.microsoft.com/download/dotnet/6.0)
-- [SQL Server](https://www.microsoft.com/sql-server) o [PostgreSQL](https://www.postgresql.org/)
-- [Docker](https://www.docker.com/) (opcional)
-- [Visual Studio 2022](https://visualstudio.microsoft.com/) o [VS Code](https://code.visualstudio.com/)
-
-## 📦 Instalación
-
-### 1. Clonar el repositorio
+### Usando Docker (recomendado)
 
 ```bash
-git clone https://github.com/tuusuario/banco_sanabria.git
-cd banco_sanabria
+docker-compose up -d
 ```
 
-### 2. Restaurar paquetes NuGet
+La API estará disponible en `http://localhost:5000` y el frontend en `http://localhost:4200` (después de seguir los pasos del frontend).
+
+### Manualmente
+
+**Backend:**
 
 ```bash
+# Restaurar dependencias
 dotnet restore
-```
 
-### 3. Configurar la base de datos
+# Crear la base de datos
+sqlcmd -S localhost -U sa -P YourStrong@Password -i BaseDatos.sql
 
-Edita el archivo `src/BancoSanabria.API/appsettings.json` con tu cadena de conexión:
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=BancoSanabria;User Id=sa;Password=TuPassword;TrustServerCertificate=True;"
-  }
-}
-```
-
-### 4. Ejecutar el script de base de datos
-
-```bash
-# Con SQL Server Management Studio o Azure Data Studio
-sqlcmd -S localhost -U sa -P TuPassword -i BaseDatos.sql
-```
-
-O ejecutar las migraciones de Entity Framework:
-
-```bash
-cd src/BancoSanabria.API
-dotnet ef database update
-```
-
-## 🚀 Ejecución
-
-### Ejecución Local
-
-```bash
+# Ejecutar la API
 cd src/BancoSanabria.API
 dotnet run
 ```
 
-La API estará disponible en:
-- HTTP: `http://localhost:5000`
-- HTTPS: `https://localhost:5001`
-- Swagger UI: `https://localhost:5001/swagger`
+API disponible en `https://localhost:5001`  
+Swagger en `https://localhost:5001/swagger`
 
-### Ejecución con Docker
+**Frontend:**
 
 ```bash
-# Construir y ejecutar con Docker Compose
-docker-compose up -d
-
-# La API estará disponible en http://localhost:5000
+cd frontend
+npm install
+npm start
 ```
 
-## 🧪 Testing
+Aplicación disponible en `http://localhost:4200`
 
-Ejecutar todas las pruebas:
+## Configuración
 
-```bash
-dotnet test
+Editar la cadena de conexión en `src/BancoSanabria.API/appsettings.json` si es necesario:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=BancoSanabria;User Id=sa;Password=YourStrong@Password;TrustServerCertificate=True;"
+  }
+}
 ```
 
-Ejecutar con cobertura:
+## Funcionalidades Implementadas
 
-```bash
-dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-```
+### Backend
 
-## 📚 API Endpoints
+- CRUD completo de Clientes, Cuentas y Movimientos
+- Validación de saldo disponible antes de débitos
+- Límite diario de retiros ($1000)
+- Generación de reportes por cliente y rango de fechas
+- Exportación de reportes en PDF (Base64)
 
-### Clientes
+**Endpoints principales:**
+- `/api/clientes`
+- `/api/cuentas`
+- `/api/movimientos`
+- `/api/reportes?fechaInicio={fecha}&fechaFin={fecha}&clienteId={id}`
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/clientes` | Obtener todos los clientes |
-| GET | `/api/clientes/{id}` | Obtener cliente por ID |
-| POST | `/api/clientes` | Crear nuevo cliente |
-| PUT | `/api/clientes/{id}` | Actualizar cliente completo |
-| PATCH | `/api/clientes/{id}` | Actualizar cliente parcialmente |
-| DELETE | `/api/clientes/{id}` | Eliminar cliente |
+### Frontend
 
-### Cuentas
+- Gestión de clientes (crear, editar, listar, eliminar)
+- Gestión de cuentas bancarias
+- Registro de movimientos (crédito/débito)
+- Búsqueda en tablas
+- Generación y descarga de reportes en PDF
+- Manejo de errores y validaciones
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/cuentas` | Obtener todas las cuentas |
-| GET | `/api/cuentas/{id}` | Obtener cuenta por ID |
-| GET | `/api/cuentas/cliente/{clienteId}` | Obtener cuentas por cliente |
-| POST | `/api/cuentas` | Crear nueva cuenta |
-| PUT | `/api/cuentas/{id}` | Actualizar cuenta |
-| PATCH | `/api/cuentas/{id}` | Actualizar cuenta parcialmente |
-| DELETE | `/api/cuentas/{id}` | Eliminar cuenta |
+## Reglas de Negocio
 
-### Movimientos
+1. Los créditos son valores positivos, los débitos son negativos
+2. No se permiten débitos si el saldo es 0: mensaje "Saldo no disponible"
+3. Límite de retiros diarios de $1000: mensaje "Cupo diario Excedido"
+4. El saldo se actualiza automáticamente con cada movimiento
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/movimientos` | Obtener todos los movimientos |
-| GET | `/api/movimientos/{id}` | Obtener movimiento por ID |
-| GET | `/api/movimientos/cuenta/{cuentaId}` | Obtener movimientos por cuenta |
-| POST | `/api/movimientos` | Registrar nuevo movimiento |
-| DELETE | `/api/movimientos/{id}` | Eliminar movimiento |
-
-### Reportes
-
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/reportes?fechaInicio={fecha}&fechaFin={fecha}&clienteId={id}` | Generar reporte en JSON + PDF Base64 |
-| POST | `/api/reportes` | Generar reporte (alternativa POST) |
-
-## 🐳 Docker
-
-### Construir imagen
-
-```bash
-docker build -t banco-sanabria-api .
-```
-
-### Ejecutar contenedor
-
-```bash
-docker run -d -p 5000:80 --name banco-api banco-sanabria-api
-```
-
-### Docker Compose (Recomendado)
-
-```bash
-# Iniciar todos los servicios (API + SQL Server)
-docker-compose up -d
-
-# Ver logs
-docker-compose logs -f
-
-# Detener servicios
-docker-compose down
-```
-
-## 🔒 Validaciones de Negocio
-
-### Movimientos - Débitos
-
-1. **Saldo Disponible**: No permite débitos si el saldo es 0 o insuficiente
-   - Mensaje: `"Saldo no disponible"`
-
-2. **Límite Diario**: Máximo $1000 en retiros por día
-   - Mensaje: `"Cupo diario Excedido"`
-
-### Movimientos - Créditos
-
-Los créditos no tienen restricciones especiales.
-
-## 📄 Datos de Prueba
+## Datos de Prueba
 
 El script `BaseDatos.sql` incluye datos de ejemplo:
 
-### Clientes
+**Clientes:**
 - Jose Lema (ID: 1234567890)
 - Marianela Montalvo (ID: 0987654321)
 - Juan Osorio (ID: 1122334455)
 
-### Cuentas
-- 478758 (Jose Lema - Ahorros)
-- 225487 (Marianela Montalvo - Corriente)
-- 495878 (Juan Osorio - Ahorros)
-- 496825 (Marianela Montalvo - Ahorros)
+**Cuentas:**
+- 478758 - Ahorros - Jose Lema
+- 225487 - Corriente - Marianela Montalvo
+- 495878 - Ahorros - Juan Osorio
+- 496825 - Ahorros - Marianela Montalvo
 
-## 📝 Notas de Desarrollo
+## Pruebas
 
-### Características Destacadas
+```bash
+# Backend
+dotnet test
 
-✅ Arquitectura limpia y escalable  
-✅ Patrón Repository y Unit of Work  
-✅ Patrón Strategy para tipos de movimiento  
-✅ Middleware global de manejo de excepciones  
-✅ Validaciones a nivel de modelo (DataAnnotations)  
-✅ Uso de LINQ y programación funcional  
-✅ Generación de PDFs con QuestPDF  
-✅ Pruebas unitarias con xUnit, Moq y FluentAssertions  
-✅ Documentación con Swagger/OpenAPI  
-✅ Soporte para Docker  
-✅ CORS configurado para Angular  
+# Frontend
+cd frontend
+npm test
+```
 
-### Próximos Pasos
+## Estructura del Proyecto
 
-- [ ] Implementar frontend Angular
-- [ ] Agregar autenticación JWT
-- [ ] Implementar logging con Serilog
-- [ ] Agregar cache con Redis
-- [ ] Implementar versionado de API
-- [ ] Agregar health checks
+```
+├── src/
+│   ├── BancoSanabria.API/          # Controllers y configuración
+│   ├── BancoSanabria.Application/  # Lógica de negocio y DTOs
+│   ├── BancoSanabria.Domain/       # Entidades
+│   └── BancoSanabria.Infrastructure/ # Repositorios y DbContext
+├── tests/
+│   └── BancoSanabria.Tests/        # Pruebas unitarias
+├── frontend/                        # Aplicación Angular
+├── BaseDatos.sql                    # Script de BD
+├── Dockerfile
+└── docker-compose.yml
+```
 
-## 👨‍💻 Autor
+## Notas
 
-Desarrollado como prueba técnica para demostrar conocimientos en:
-- Arquitectura de software
-- .NET y Entity Framework Core
-- Patrones de diseño
-- Pruebas unitarias
-- DevOps (Docker)
+- El frontend está desarrollado con CSS personalizado, sin usar librerías de componentes
+- Se implementó el patrón Strategy para el manejo de tipos de movimiento
+- Las validaciones de negocio se manejan tanto en backend como frontend
+- Los reportes se generan en formato JSON con el PDF incluido en Base64
 
-## 📄 Licencia
+## Postman
 
-Este proyecto es de código abierto y está disponible bajo la licencia MIT.
-
+Importar `Postman_Collection.json` para probar los endpoints de la API.

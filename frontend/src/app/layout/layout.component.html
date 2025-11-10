@@ -1,0 +1,93 @@
+<div class="layout" [class.sidebar-collapsed]="!sidebarOpen">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1 class="sidebar-logo">
+        <span class="logo-icon">🏦</span>
+        <span class="logo-text" *ngIf="sidebarOpen">Banco Sanabria</span>
+      </h1>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a
+        routerLink="/dashboard"
+        routerLinkActive="active"
+        class="nav-item"
+        [title]="sidebarOpen ? '' : 'Dashboard'"
+      >
+        <span class="nav-icon">📊</span>
+        <span class="nav-text" *ngIf="sidebarOpen">Dashboard</span>
+      </a>
+
+      <a
+        routerLink="/clientes"
+        routerLinkActive="active"
+        class="nav-item"
+        [title]="sidebarOpen ? '' : 'Clientes'"
+      >
+        <span class="nav-icon">👥</span>
+        <span class="nav-text" *ngIf="sidebarOpen">Clientes</span>
+      </a>
+
+      <a
+        routerLink="/cuentas"
+        routerLinkActive="active"
+        class="nav-item"
+        [title]="sidebarOpen ? '' : 'Cuentas'"
+      >
+        <span class="nav-icon">💳</span>
+        <span class="nav-text" *ngIf="sidebarOpen">Cuentas</span>
+      </a>
+
+      <a
+        routerLink="/movimientos"
+        routerLinkActive="active"
+        class="nav-item"
+        [title]="sidebarOpen ? '' : 'Movimientos'"
+      >
+        <span class="nav-icon">💸</span>
+        <span class="nav-text" *ngIf="sidebarOpen">Movimientos</span>
+      </a>
+
+      <a
+        routerLink="/reportes"
+        routerLinkActive="active"
+        class="nav-item"
+        [title]="sidebarOpen ? '' : 'Reportes'"
+      >
+        <span class="nav-icon">📄</span>
+        <span class="nav-text" *ngIf="sidebarOpen">Reportes</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-wrapper">
+    <!-- Header -->
+    <header class="header">
+      <button class="menu-toggle" (click)="toggleSidebar()" aria-label="Toggle Menu">
+        <span class="hamburger-icon">☰</span>
+      </button>
+
+      <div class="header-title">
+        <h2>Sistema de Gestión Bancaria</h2>
+      </div>
+
+      <div class="header-actions">
+        <div class="user-menu">
+          <span class="user-icon">👤</span>
+          <span class="user-name">Administrador</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
+
+<!-- Notification Component -->
+<app-notification></app-notification>
+

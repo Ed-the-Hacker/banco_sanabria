@@ -1,0 +1,169 @@
+<div class="page-header">
+  <h1>{{ isEditMode ? 'Editar Cliente' : 'Nuevo Cliente' }}</h1>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <!-- Nombre -->
+        <div class="form-group">
+          <label for="nombre">Nombre Completo *</label>
+          <input
+            id="nombre"
+            type="text"
+            formControlName="nombre"
+            placeholder="Ej: Juan Pérez"
+            [class.error]="nombre?.invalid && nombre?.touched"
+          />
+          <span *ngIf="nombre?.invalid && nombre?.touched" class="error-message">
+            <span *ngIf="nombre?.errors?.['required']">El nombre es requerido</span>
+            <span *ngIf="nombre?.errors?.['maxlength']">Máximo 100 caracteres</span>
+          </span>
+        </div>
+
+        <!-- Identificación -->
+        <div class="form-group">
+          <label for="identificacion">Identificación *</label>
+          <input
+            id="identificacion"
+            type="text"
+            formControlName="identificacion"
+            placeholder="Ej: 1234567890"
+            [class.error]="identificacion?.invalid && identificacion?.touched"
+          />
+          <span *ngIf="identificacion?.invalid && identificacion?.touched" class="error-message">
+            <span *ngIf="identificacion?.errors?.['required']">La identificación es requerida</span>
+            <span *ngIf="identificacion?.errors?.['maxlength']">Máximo 20 caracteres</span>
+          </span>
+          <small *ngIf="isEditMode" class="text-muted">
+            La identificación no puede ser modificada
+          </small>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Género -->
+        <div class="form-group">
+          <label for="genero">Género *</label>
+          <select
+            id="genero"
+            formControlName="genero"
+            [class.error]="genero?.invalid && genero?.touched"
+          >
+            <option value="">Seleccione...</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+            <option value="Otro">Otro</option>
+          </select>
+          <span *ngIf="genero?.invalid && genero?.touched" class="error-message">
+            El género es requerido
+          </span>
+        </div>
+
+        <!-- Edad -->
+        <div class="form-group">
+          <label for="edad">Edad *</label>
+          <input
+            id="edad"
+            type="number"
+            formControlName="edad"
+            placeholder="Ej: 25"
+            min="18"
+            max="120"
+            [class.error]="edad?.invalid && edad?.touched"
+          />
+          <span *ngIf="edad?.invalid && edad?.touched" class="error-message">
+            <span *ngIf="edad?.errors?.['required']">La edad es requerida</span>
+            <span *ngIf="edad?.errors?.['min']">Edad mínima: 18 años</span>
+            <span *ngIf="edad?.errors?.['max']">Edad máxima: 120 años</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Dirección -->
+        <div class="form-group">
+          <label for="direccion">Dirección</label>
+          <input
+            id="direccion"
+            type="text"
+            formControlName="direccion"
+            placeholder="Ej: Calle Principal 123"
+            [class.error]="direccion?.invalid && direccion?.touched"
+          />
+          <span *ngIf="direccion?.invalid && direccion?.touched" class="error-message">
+            Máximo 200 caracteres
+          </span>
+        </div>
+
+        <!-- Teléfono -->
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input
+            id="telefono"
+            type="tel"
+            formControlName="telefono"
+            placeholder="Ej: 0987654321"
+            [class.error]="telefono?.invalid && telefono?.touched"
+          />
+          <span *ngIf="telefono?.invalid && telefono?.touched" class="error-message">
+            Máximo 20 caracteres
+          </span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Contraseña -->
+        <div class="form-group">
+          <label for="contrasena">
+            Contraseña {{ isEditMode ? '(dejar vacío para no cambiar)' : '*' }}
+          </label>
+          <input
+            id="contrasena"
+            type="password"
+            formControlName="contrasena"
+            placeholder="••••••••"
+            [class.error]="contrasena?.invalid && contrasena?.touched"
+          />
+          <span *ngIf="contrasena?.invalid && contrasena?.touched" class="error-message">
+            <span *ngIf="contrasena?.errors?.['required']">La contraseña es requerida</span>
+            <span *ngIf="contrasena?.errors?.['minlength']">Mínimo 4 caracteres</span>
+          </span>
+        </div>
+
+        <!-- Estado -->
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="estado" />
+            Cliente Activo
+          </label>
+          <small class="text-muted">
+            Solo los clientes activos pueden realizar transacciones
+          </small>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="onCancel()"
+          [disabled]="loading"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="loading || clienteForm.invalid"
+        >
+          <span *ngIf="!loading">{{ isEditMode ? 'Actualizar' : 'Crear' }} Cliente</span>
+          <span *ngIf="loading" class="spinner"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

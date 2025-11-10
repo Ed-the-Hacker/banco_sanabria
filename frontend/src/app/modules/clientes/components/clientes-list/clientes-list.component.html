@@ -1,0 +1,106 @@
+<div class="page-header">
+  <h1>Gestión de Clientes</h1>
+  <button class="btn btn-primary" routerLink="/clientes/nuevo">
+    <span>➕</span> Nuevo Cliente
+  </button>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <!-- Búsqueda -->
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        placeholder="Buscar por nombre, identificación, teléfono..."
+        class="search-input"
+      />
+      <span class="search-icon">🔍</span>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner"></div>
+      <p class="text-muted mt-md">Cargando clientes...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && clientes.length === 0" class="empty-state">
+      <span class="empty-icon">👥</span>
+      <h3>No hay clientes registrados</h3>
+      <p class="text-muted">Comienza agregando tu primer cliente</p>
+      <button class="btn btn-primary" routerLink="/clientes/nuevo">Crear Cliente</button>
+    </div>
+
+    <!-- Tabla de Clientes -->
+    <div *ngIf="!loading && clientes.length > 0" class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Identificación</th>
+            <th>Edad</th>
+            <th>Género</th>
+            <th>Dirección</th>
+            <th>Teléfono</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cliente of clientes | searchFilter: searchText : ['nombre', 'identificacion', 'telefono', 'direccion']">
+            <td>
+              <div class="client-name">
+                <span class="client-avatar">{{ cliente.nombre.charAt(0).toUpperCase() }}</span>
+                <strong>{{ cliente.nombre }}</strong>
+              </div>
+            </td>
+            <td>{{ cliente.identificacion }}</td>
+            <td>{{ cliente.edad }} años</td>
+            <td>{{ cliente.genero }}</td>
+            <td>{{ cliente.direccion }}</td>
+            <td>{{ cliente.telefono }}</td>
+            <td>
+              <span class="badge" [class.badge-success]="cliente.estado" [class.badge-danger]="!cliente.estado">
+                {{ cliente.estado ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button
+                  class="btn-icon btn-icon-primary"
+                  (click)="onViewCuentas(cliente)"
+                  title="Ver Cuentas"
+                >
+                  💳
+                </button>
+                <button
+                  class="btn-icon btn-icon-secondary"
+                  (click)="onEdit(cliente)"
+                  title="Editar"
+                >
+                  ✏️
+                </button>
+                <button
+                  class="btn-icon btn-icon-danger"
+                  (click)="onDelete(cliente)"
+                  title="Eliminar"
+                >
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Resultados de búsqueda -->
+    <div *ngIf="searchText && (clientes | searchFilter: searchText : ['nombre', 'identificacion', 'telefono']).length === 0" class="empty-state">
+      <span class="empty-icon">🔍</span>
+      <h3>No se encontraron resultados</h3>
+      <p class="text-muted">Intenta con otros términos de búsqueda</p>
+    </div>
+  </div>
+</div>
+
