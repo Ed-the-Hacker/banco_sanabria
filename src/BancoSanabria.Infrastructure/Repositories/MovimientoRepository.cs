@@ -1,3 +1,5 @@
+using System;
+using System.Linq.Expressions;
 using BancoSanabria.Application.Common.Interfaces;
 using BancoSanabria.Domain.Entities;
 using BancoSanabria.Infrastructure.Data;
@@ -17,6 +19,7 @@ namespace BancoSanabria.Infrastructure.Repositories
         public async Task<IEnumerable<Movimiento>> GetMovimientosByCuentaIdAsync(int cuentaId)
         {
             return await _dbSet
+                .Include(m => m.Cuenta)
                 .Where(m => m.CuentaId == cuentaId)
                 .OrderBy(m => m.Fecha)
                 .ToListAsync();
@@ -27,10 +30,14 @@ namespace BancoSanabria.Infrastructure.Repositories
             DateTime fechaInicio, 
             DateTime fechaFin)
         {
+            var fechaInicioDia = fechaInicio.Date;
+            var fechaFinDia = fechaFin.Date.AddDays(1).AddTicks(-1);
+
             return await _dbSet
+                .Include(m => m.Cuenta)
                 .Where(m => m.CuentaId == cuentaId 
-                    && m.Fecha >= fechaInicio 
-                    && m.Fecha <= fechaFin)
+                    && m.Fecha >= fechaInicioDia
+                    && m.Fecha <= fechaFinDia)
                 .OrderBy(m => m.Fecha)
                 .ToListAsync();
         }

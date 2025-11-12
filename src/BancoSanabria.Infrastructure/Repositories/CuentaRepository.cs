@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using BancoSanabria.Application.Common.Interfaces;
 using BancoSanabria.Domain.Entities;
 using BancoSanabria.Infrastructure.Data;
@@ -24,6 +25,7 @@ namespace BancoSanabria.Infrastructure.Repositories
         public async Task<IEnumerable<Cuenta>> GetCuentasByClienteIdAsync(int clienteId)
         {
             return await _dbSet
+                .Include(c => c.Cliente)
                 .Where(c => c.ClienteId == clienteId)
                 .ToListAsync();
         }
@@ -41,6 +43,21 @@ namespace BancoSanabria.Infrastructure.Repositories
             return await _dbSet
                 .Include(c => c.Cliente)
                 .FirstOrDefaultAsync(c => c.CuentaId == id);
+        }
+
+        public override async Task<IEnumerable<Cuenta>> GetAllAsync()
+        {
+            return await _dbSet
+                .Include(c => c.Cliente)
+                .ToListAsync();
+        }
+
+        public override async Task<IEnumerable<Cuenta>> FindAsync(Expression<Func<Cuenta, bool>> predicate)
+        {
+            return await _dbSet
+                .Include(c => c.Cliente)
+                .Where(predicate)
+                .ToListAsync();
         }
     }
 }
