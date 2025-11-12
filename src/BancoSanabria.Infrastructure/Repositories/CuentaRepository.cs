@@ -1,3 +1,4 @@
+using BancoSanabria.Application.Common.Interfaces;
 using BancoSanabria.Domain.Entities;
 using BancoSanabria.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

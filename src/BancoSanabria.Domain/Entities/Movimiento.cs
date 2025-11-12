@@ -1,3 +1,5 @@
+using System;
+
 namespace BancoSanabria.Domain.Entities
 {
     /// <summary>

@@ -1,6 +1,6 @@
+using BancoSanabria.Application.Common.Interfaces;
 using BancoSanabria.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace BancoSanabria.Infrastructure.Repositories
 {

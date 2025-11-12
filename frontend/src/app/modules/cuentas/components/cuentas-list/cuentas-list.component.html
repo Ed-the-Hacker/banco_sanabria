@@ -1,0 +1,67 @@
+<div class="page-header">
+  <h1>Cuentas</h1>
+  <button class="btn btn-primary" routerLink="/cuentas/nuevo">
+    <span>➕</span> Nueva Cuenta
+  </button>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        placeholder="Buscar por número o tipo de cuenta"
+        class="search-input"
+      />
+      <span class="search-icon">🔍</span>
+    </div>
+
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner"></div>
+      <p class="text-muted mt-md">Cargando cuentas...</p>
+    </div>
+
+    <div *ngIf="!loading && cuentas.length === 0" class="empty-state">
+      <span class="empty-icon">💳</span>
+      <h3>No hay cuentas registradas</h3>
+      <p class="text-muted">Registra una cuenta para comenzar a operar</p>
+      <button class="btn btn-primary" routerLink="/cuentas/nuevo">Crear Cuenta</button>
+    </div>
+
+    <div *ngIf="!loading && cuentas.length > 0" class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Número</th>
+            <th>Tipo</th>
+            <th>Cliente</th>
+            <th>Saldo</th>
+            <th>Estado</th>
+            <th class="text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cuenta of cuentas | searchFilter: searchText : ['numeroCuenta', 'tipoCuenta', 'nombreCliente']">
+            <td>{{ cuenta.numeroCuenta }}</td>
+            <td>{{ cuenta.tipoCuenta }}</td>
+            <td>{{ cuenta.nombreCliente || 'Sin asignar' }}</td>
+            <td>${{ cuenta.saldoInicial | number:'1.2-2' }}</td>
+            <td>
+              <span class="badge" [class.badge-success]="cuenta.estado" [class.badge-danger]="!cuenta.estado">
+                {{ cuenta.estado ? 'Activa' : 'Inactiva' }}
+              </span>
+            </td>
+            <td class="text-right">
+              <div class="action-buttons">
+                <button class="btn-icon btn-icon-secondary" (click)="onEdit(cuenta)" title="Editar">✏️</button>
+                <button class="btn-icon btn-icon-danger" (click)="onDelete(cuenta)" title="Eliminar">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,83 @@
+<div class="page-header">
+  <h1>Registrar Movimiento</h1>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="movimientoForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="cuentaId">Cuenta *</label>
+          <select
+            id="cuentaId"
+            formControlName="cuentaId"
+            [class.error]="cuentaIdControl?.invalid && cuentaIdControl?.touched"
+          >
+            <option value="">Seleccione una cuenta</option>
+            <option *ngFor="let cuenta of cuentas" [value]="cuenta.cuentaId">
+              {{ cuenta.numeroCuenta }} - {{ cuenta.nombreCliente || 'Sin cliente' }}
+            </option>
+          </select>
+          <span *ngIf="cuentaIdControl?.invalid && cuentaIdControl?.touched" class="error-message">
+            Selecciona la cuenta
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="tipoMovimiento">Tipo *</label>
+          <select
+            id="tipoMovimiento"
+            formControlName="tipoMovimiento"
+            [class.error]="tipoMovimiento?.invalid && tipoMovimiento?.touched"
+          >
+            <option value="Credito">Crédito</option>
+            <option value="Debito">Débito</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="valor">Valor *</label>
+          <input
+            id="valor"
+            type="number"
+            min="0.01"
+            step="0.01"
+            formControlName="valor"
+            placeholder="0.00"
+            [class.error]="valor?.invalid && valor?.touched"
+          />
+          <span *ngIf="valor?.invalid && valor?.touched" class="error-message">
+            <span *ngIf="valor?.errors?.['required']">El valor es requerido</span>
+            <span *ngIf="valor?.errors?.['min']">Debe ser mayor a 0</span>
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="fecha">Fecha *</label>
+          <input
+            id="fecha"
+            type="datetime-local"
+            formControlName="fecha"
+            [class.error]="fecha?.invalid && fecha?.touched"
+          />
+          <span *ngIf="fecha?.invalid && fecha?.touched" class="error-message">
+            La fecha es requerida
+          </span>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading || movimientoForm.invalid">
+          <span *ngIf="!loading">Registrar Movimiento</span>
+          <span *ngIf="loading" class="spinner"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

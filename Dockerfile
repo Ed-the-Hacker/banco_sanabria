@@ -11,7 +11,7 @@ COPY ["src/BancoSanabria.Infrastructure/BancoSanabria.Infrastructure.csproj", "s
 RUN dotnet restore "src/BancoSanabria.API/BancoSanabria.API.csproj"
 
 # Copiar el resto del código y compilar
-COPY . .
+COPY src/ ./src/
 WORKDIR "/src/src/BancoSanabria.API"
 RUN dotnet build "BancoSanabria.API.csproj" -c Release -o /app/build
 

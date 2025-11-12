@@ -1,0 +1,103 @@
+<div class="page-header">
+  <h1>Reportes de Estado de Cuenta</h1>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="reporteForm" (ngSubmit)="generarReporte()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="clienteId">Cliente *</label>
+          <select
+            id="clienteId"
+            formControlName="clienteId"
+            [class.error]="reporteForm.get('clienteId')?.invalid && reporteForm.get('clienteId')?.touched"
+          >
+            <option value="">Seleccione un cliente</option>
+            <option *ngFor="let cliente of clientes" [value]="cliente.clienteId">
+              {{ cliente.nombre }} ({{ cliente.identificacion }})
+            </option>
+          </select>
+          <span *ngIf="reporteForm.get('clienteId')?.invalid && reporteForm.get('clienteId')?.touched" class="error-message">
+            El cliente es requerido
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="fechaInicio">Fecha Inicio *</label>
+          <input id="fechaInicio" type="date" formControlName="fechaInicio" />
+        </div>
+
+        <div class="form-group">
+          <label for="fechaFin">Fecha Fin *</label>
+          <input id="fechaFin" type="date" formControlName="fechaFin" />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="loading || reporteForm.invalid">
+          <span *ngIf="!loading">Generar Reporte</span>
+          <span *ngIf="loading" class="spinner"></span>
+        </button>
+        <button type="button" class="btn btn-outline" (click)="descargarPdf()" [disabled]="!reporte">
+          Descargar PDF
+        </button>
+      </div>
+    </form>
+
+    <div *ngIf="reporte" class="reporte-card">
+      <div class="reporte-header">
+        <h2>{{ reporte.cliente.nombre }}</h2>
+        <div class="reporte-datos">
+          <span><strong>Identificación:</strong> {{ reporte.cliente.identificacion }}</span>
+          <span><strong>Dirección:</strong> {{ reporte.cliente.direccion }}</span>
+          <span><strong>Teléfono:</strong> {{ reporte.cliente.telefono }}</span>
+        </div>
+      </div>
+
+      <div class="reporte-cuentas">
+        <div class="cuenta" *ngFor="let cuenta of reporte.cuentas; trackBy: trackByCuenta">
+          <div class="cuenta-header">
+            <div>
+              <h3>{{ cuenta.numeroCuenta }}</h3>
+              <p>{{ cuenta.tipoCuenta }}</p>
+            </div>
+            <div class="cuenta-resumen">
+              <span>Saldo Inicial: {{ cuenta.saldoInicial | currency:'USD':'symbol':'1.2-2' }}</span>
+              <span>Total Créditos: <strong class="text-success">{{ cuenta.totalCreditos | currency:'USD':'symbol':'1.2-2' }}</strong></span>
+              <span>Total Débitos: <strong class="text-danger">{{ cuenta.totalDebitos | currency:'USD':'symbol':'1.2-2' }}</strong></span>
+              <span>Saldo Disponible: <strong>{{ cuenta.saldoDisponible | currency:'USD':'symbol':'1.2-2' }}</strong></span>
+            </div>
+          </div>
+
+          <div class="table-container" *ngIf="cuenta.movimientos.length > 0; else sinMovimientos">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Tipo</th>
+                  <th>Valor</th>
+                  <th>Saldo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let movimiento of cuenta.movimientos">
+                  <td>{{ movimiento.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+                  <td>{{ movimiento.tipoMovimiento }}</td>
+                  <td [class.text-success]="movimiento.valor > 0" [class.text-danger]="movimiento.valor < 0">
+                    {{ movimiento.valor | currency:'USD':'symbol':'1.2-2' }}
+                  </td>
+                  <td>{{ movimiento.saldo | currency:'USD':'symbol':'1.2-2' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ng-template #sinMovimientos>
+            <p class="text-muted">No hay movimientos en el período seleccionado.</p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

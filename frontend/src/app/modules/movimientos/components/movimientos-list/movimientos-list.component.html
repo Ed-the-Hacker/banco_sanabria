@@ -1,0 +1,68 @@
+<div class="page-header">
+  <h1>Movimientos</h1>
+  <button class="btn btn-primary" (click)="onNuevoMovimiento()">
+    <span>➕</span> Nuevo Movimiento
+  </button>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        placeholder="Buscar por tipo, número de cuenta o valor"
+        class="search-input"
+      />
+      <span class="search-icon">🔍</span>
+    </div>
+
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner"></div>
+      <p class="text-muted mt-md">Cargando movimientos...</p>
+    </div>
+
+    <div *ngIf="!loading && movimientos.length === 0" class="empty-state">
+      <span class="empty-icon">📈</span>
+      <h3>No hay movimientos registrados</h3>
+      <p class="text-muted">Registra un depósito o retiro para comenzar</p>
+      <button class="btn btn-primary" (click)="onNuevoMovimiento()">Registrar Movimiento</button>
+    </div>
+
+    <div *ngIf="!loading && movimientos.length > 0" class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Cuenta</th>
+            <th>Tipo</th>
+            <th>Valor</th>
+            <th>Saldo</th>
+            <th class="text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let movimiento of movimientos | searchFilter: searchText : ['tipoMovimiento', 'numeroCuenta', 'valor']; trackBy: trackById"
+          >
+            <td>{{ movimiento.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ movimiento.numeroCuenta || movimiento.cuentaId }}</td>
+            <td>
+              <span class="badge" [class.badge-success]="movimiento.valor > 0" [class.badge-danger]="movimiento.valor < 0">
+                {{ movimiento.tipoMovimiento }}
+              </span>
+            </td>
+            <td [class.text-success]="movimiento.valor > 0" [class.text-danger]="movimiento.valor < 0">
+              {{ movimiento.valor | currency:'USD':'symbol':'1.2-2' }}
+            </td>
+            <td>{{ movimiento.saldo | currency:'USD':'symbol':'1.2-2' }}</td>
+            <td class="text-right">
+              <button class="btn-icon btn-icon-danger" (click)="onDelete(movimiento)" title="Eliminar">🗑️</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

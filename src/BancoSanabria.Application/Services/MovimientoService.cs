@@ -1,8 +1,8 @@
+using BancoSanabria.Application.Common.Interfaces;
 using BancoSanabria.Application.DTOs;
 using BancoSanabria.Application.Strategies;
 using BancoSanabria.Domain.Entities;
 using BancoSanabria.Domain.Exceptions;
-using BancoSanabria.Infrastructure.UnitOfWork;
 
 namespace BancoSanabria.Application.Services
 {

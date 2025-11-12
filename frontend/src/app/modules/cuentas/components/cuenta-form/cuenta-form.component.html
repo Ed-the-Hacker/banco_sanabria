@@ -1,0 +1,97 @@
+<div class="page-header">
+  <h1>{{ isEditMode ? 'Editar Cuenta' : 'Nueva Cuenta' }}</h1>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="cuentaForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="numeroCuenta">Número de Cuenta *</label>
+          <input
+            id="numeroCuenta"
+            type="text"
+            formControlName="numeroCuenta"
+            placeholder="Ej: 123456789"
+            [class.error]="numeroCuenta?.invalid && numeroCuenta?.touched"
+          />
+          <span *ngIf="numeroCuenta?.invalid && numeroCuenta?.touched" class="error-message">
+            <span *ngIf="numeroCuenta?.errors?.['required']">El número de cuenta es requerido</span>
+            <span *ngIf="numeroCuenta?.errors?.['maxlength']">Máximo 20 caracteres</span>
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="tipoCuenta">Tipo de Cuenta *</label>
+          <select
+            id="tipoCuenta"
+            formControlName="tipoCuenta"
+            [class.error]="tipoCuenta?.invalid && tipoCuenta?.touched"
+          >
+            <option value="">Seleccione...</option>
+            <option value="Ahorros">Ahorros</option>
+            <option value="Corriente">Corriente</option>
+          </select>
+          <span *ngIf="tipoCuenta?.invalid && tipoCuenta?.touched" class="error-message">
+            El tipo de cuenta es requerido
+          </span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="saldoInicial">Saldo *</label>
+          <input
+            id="saldoInicial"
+            type="number"
+            min="0"
+            formControlName="saldoInicial"
+            placeholder="0.00"
+            [class.error]="saldoInicial?.invalid && saldoInicial?.touched"
+          />
+          <span *ngIf="saldoInicial?.invalid && saldoInicial?.touched" class="error-message">
+            <span *ngIf="saldoInicial?.errors?.['required']">El saldo es requerido</span>
+            <span *ngIf="saldoInicial?.errors?.['min']">Debe ser un valor positivo</span>
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="clienteId">Cliente *</label>
+          <select
+            id="clienteId"
+            formControlName="clienteId"
+            [class.error]="clienteIdControl?.invalid && clienteIdControl?.touched"
+          >
+            <option value="">Seleccione cliente</option>
+            <option *ngFor="let cliente of clientes" [value]="cliente.clienteId">
+              {{ cliente.nombre }} ({{ cliente.identificacion }})
+            </option>
+          </select>
+          <span *ngIf="clienteIdControl?.invalid && clienteIdControl?.touched" class="error-message">
+            El cliente es requerido
+          </span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="estado" />
+            Cuenta Activa
+          </label>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading || cuentaForm.invalid">
+          <span *ngIf="!loading">{{ isEditMode ? 'Actualizar' : 'Crear' }} Cuenta</span>
+          <span *ngIf="loading" class="spinner"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

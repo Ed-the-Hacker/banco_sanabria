@@ -1,5 +1,5 @@
+using BancoSanabria.Application.Common.Interfaces;
 using BancoSanabria.Domain.Entities;
-using BancoSanabria.Infrastructure.UnitOfWork;
 
 namespace BancoSanabria.Application.Strategies
 {

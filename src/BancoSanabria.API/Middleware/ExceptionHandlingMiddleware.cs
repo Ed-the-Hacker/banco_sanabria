@@ -1,6 +1,12 @@
-using BancoSanabria.Domain.Exceptions;
+using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
+using System.Threading.Tasks;
+using BancoSanabria.Domain.Exceptions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace BancoSanabria.API.Middleware
 {

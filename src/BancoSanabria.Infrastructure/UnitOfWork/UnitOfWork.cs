@@ -1,5 +1,5 @@
+using BancoSanabria.Application.Common.Interfaces;
 using BancoSanabria.Infrastructure.Data;
-using BancoSanabria.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace BancoSanabria.Infrastructure.UnitOfWork

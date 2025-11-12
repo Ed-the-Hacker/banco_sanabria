@@ -1,8 +1,4 @@
 using BancoSanabria.Application.Strategies;
-using BancoSanabria.Domain.Entities;
-using BancoSanabria.Domain.Exceptions;
-using BancoSanabria.Infrastructure.Repositories;
-using BancoSanabria.Infrastructure.UnitOfWork;
 using FluentAssertions;
 using Moq;
 using Xunit;

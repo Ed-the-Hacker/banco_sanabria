@@ -1,10 +1,15 @@
 using BancoSanabria.API.Middleware;
+using BancoSanabria.Application.Common.Interfaces;
 using BancoSanabria.Application.Services;
 using BancoSanabria.Application.Strategies;
 using BancoSanabria.Infrastructure.Data;
 using BancoSanabria.Infrastructure.Repositories;
 using BancoSanabria.Infrastructure.Services;
 using BancoSanabria.Infrastructure.UnitOfWork;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,9 +63,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
+        policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 

@@ -1,5 +1,5 @@
+using BancoSanabria.Application.Common.Interfaces;
 using BancoSanabria.Application.DTOs;
-using BancoSanabria.Application.Services;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
