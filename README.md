@@ -29,7 +29,25 @@ Aplicación full-stack para la gestión de clientes, cuentas y movimientos banca
 docker-compose up -d
 ```
 
-La API estará disponible en `http://localhost:5000` y el frontend en `http://localhost:4200` (después de seguir los pasos del frontend).
+1. **Inicializar la base de datos dentro del contenedor**
+   ```bash
+   docker cp BaseDatos.sql banco-sqlserver:/tmp/BaseDatos.sql
+   docker exec -it banco-sqlserver /opt/mssql-tools/bin/sqlcmd \
+     -S localhost -U sa -P YourStrong@Password -i /tmp/BaseDatos.sql
+   ```
+2. **Iniciar el frontend apuntando al backend de Docker**
+   ```bash
+   cd frontend
+   npm install
+   npm run start:docker
+   ```
+
+- API disponible en `http://localhost:5000/api`
+- Swagger en `http://localhost:5000/swagger`
+- Frontend en `http://localhost:4200`
+
+> Nota: cuando levantas la app en local (`npm start`) se usa la API en `https://localhost:5001/api`.  
+> Con `npm run start:docker` automáticamente se reemplaza el `apiUrl` por `http://localhost:5000/api`.
 
 ### Manualmente
 
@@ -71,6 +89,10 @@ Editar la cadena de conexión en `src/BancoSanabria.API/appsettings.json` si es 
   }
 }
 ```
+
+En Docker no es necesario editar el archivo. El valor se sobreescribe con la variable
+de entorno `ConnectionStrings__DefaultConnection` definida en `docker-compose.yml`
+(servidor `sqlserver` y usuario `sa`).
 
 ## Funcionalidades Implementadas
 
